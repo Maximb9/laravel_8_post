@@ -17,20 +17,63 @@ class PostController extends Controller
 
     public function create()
     {
-return view('post.create');
+        return view('post.create');
     }
 
-    public function update()
+    public function store()
     {
-        $post = Post::find(6);
-        $post->update([
-            'title' => 'another post_6_create',
-            'content' => 'another content_6_create',
-            'image' => 'another image_6_create',
-            'likes' => 100,
-            'is_published' => 0
+        $data = request()->validate([
+            'title' => 'string',
+            'content' => 'string',
+            'image' => 'string',
         ]);
+
+        Post::create($data);
+
+        return redirect()->route('post.index');
     }
+
+    public function show( Post $post )
+    {
+
+        return view('post.show', compact('post'));
+    }
+
+    public function edit( Post $post )
+    {
+
+        return view('post.edit', compact('post'));
+    }
+
+    public function update( Post $post )
+    {
+        $data = request()->validate([
+            'title' => 'string',
+            'content' => 'string',
+            'image' => 'string',
+        ]);
+
+        $post->update($data);
+        return redirect()->route('post.show', $post->id);
+    }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return redirect()->route('post.index');
+    }
+
+//    public function update()
+//    {
+//        $post = Post::find(6);
+//        $post->update([
+//            'title' => 'another post_6_create',
+//            'content' => 'another content_6_create',
+//            'image' => 'another image_6_create',
+//            'likes' => 100,
+//            'is_published' => 0
+//        ]);
+//    }
 
     public function delete()
     {
@@ -43,7 +86,7 @@ return view('post.create');
     {
         $post = Post::firstOrCreate([
             'image' => 'some image_5_create555',
-        ],[
+        ], [
             'title' => 'my33e',
             'content' => 'some content_333_creqwerqwefate',
             'image' => 's234123553omeer image_5_crweeate',
@@ -55,10 +98,11 @@ return view('post.create');
         dd('finished');
     }
 
-    public function updateOrCreate(){
+    public function updateOrCreate()
+    {
         $post = Post::updateOrCreate([
             'content' => 'some11111 content_333_create111',
-        ],[
+        ], [
             'title' => '111',
             'content' => 'some11111 content_333_create111',
             'image' => '111',
