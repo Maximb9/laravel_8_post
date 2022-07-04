@@ -24,7 +24,7 @@ class CreatePostsTable extends Migration
 
             $table->softDeletes();
 
-            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable(false);
 
             $table->index('category_id', 'post_category_idx');
 
