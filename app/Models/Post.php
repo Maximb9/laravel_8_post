@@ -13,4 +13,8 @@ class Post extends Model
 
     protected $table = 'posts';
     protected $guarded = [];
+
+    public function category() {
+        return $this->belongsTo(Category::Class, 'category_id', 'id');
+    }
 }
