@@ -45,8 +45,8 @@ class PostController extends Controller
 
     public function edit( Post $post )
     {
-
-        return view('post.edit', compact('post'));
+        $categories = Category::all();
+        return view('post.edit', compact('post', 'categories'));
     }
 
     public function update( Post $post )
@@ -55,6 +55,7 @@ class PostController extends Controller
             'title' => 'string',
             'content' => 'string',
             'image' => 'string',
+            'category_id' => '',
         ]);
 
         $post->update($data);
