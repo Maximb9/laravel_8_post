@@ -22,7 +22,7 @@ class PostController extends Controller
         $categories = Category::all();
         $tags = Tag::all();
 
-        return view('post.create', compact( 'categories', 'tags'));
+        return view('post.create', compact('categories', 'tags'));
     }
 
     public function store()
@@ -40,9 +40,10 @@ class PostController extends Controller
 
 
         $post = Post::create($data);
-//        возьми $post у него есть tags... Переходим в Models Post, у него есть метод tag()
+//        возьмем $post у него есть tags... Переходим в Models Post, у него есть метод tags()
 //        и есть соеденительная таблица post_tags (pivot) и в этой таблице привяжи вот к этому посту
 //        привяжи теги. Какие теги мы укажим здесь (принимает массив [] поэтому можем указать $tags).
+//        метод attach связывате посты и теги.
         $post->tags()->attach($tags);
 
         return redirect()->route('post.index');
@@ -57,7 +58,8 @@ class PostController extends Controller
     public function edit( Post $post )
     {
         $categories = Category::all();
-        return view('post.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+        return view('post.edit', compact('post', 'categories', 'tags'));
     }
 
     public function update( Post $post )
@@ -67,13 +69,19 @@ class PostController extends Controller
             'content' => 'string',
             'image' => 'string',
             'category_id' => '',
+            'tags' => ''
         ]);
 
+        $tags = $data['tags'];
+        unset($data['tags']);
+
         $post->update($data);
+// метод sync удаляет и добавляет новые... обновляет, те которые есть не трогает, а добавляет новые.
+        $post->tags()->sync($tags);
         return redirect()->route('post.show', $post->id);
     }
 
-    public function destroy(Post $post)
+    public function destroy( Post $post )
     {
         $post->delete();
         return redirect()->route('post.index');
