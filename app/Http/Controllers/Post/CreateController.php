@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
-use App\Models\Post;
+use App\Models\Category;
+use App\Models\Tag;
 
-class IndexController extends Controller
+class CreateController extends Controller
 {
     public function __invoke()
     {
-        $posts = Post::All();
-        
-        return view('post.index', compact('posts'));
+        $categories = Category::all();
+        $tags = Tag::all();
+
+        return view('post.create', compact('categories', 'tags'));
     }
 }
