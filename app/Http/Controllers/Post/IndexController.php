@@ -16,7 +16,7 @@ class IndexController extends BaseController
 
         $filter = app()->make(PostFilter::class, ['queryParams' => array_filter($data)]);
         $posts = Post::filter($filter);
-
+        dd($posts);
 
 //        $query = Post::query();
 //
