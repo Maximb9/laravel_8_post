@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', 'HomeController@index');
+
 Route::group(['namespace' => 'Post'], function (){
     Route::get('/posts', 'IndexController')->name('post.index');
     Route::get('/posts/create', 'CreateController')->name('post.create');
@@ -37,3 +39,7 @@ Route::get('/posts/update_or_create', 'PostController@updateOrCreate');
 Route::get('/main', 'MainController@index')->name('main.index');
 Route::get('/contacts', 'ContactController@index')->name('contact.index');
 Route::get('/about', 'AboutController@index')->name('about.index');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
