@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', 'HomeController@index');
+Route::get('/', 'HomeController@index')->name('home');
 
 Route::group(['namespace' => 'Post'], function (){
     Route::get('/posts', 'IndexController')->name('post.index');
@@ -24,7 +24,7 @@ Route::group(['namespace' => 'Post'], function (){
     Route::delete('/posts/{post}', 'DestroyController')->name('post.delete');
 });
 
-Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::group(['namespace' => 'Post'], function () {
         Route::get('/post', 'IndexController')->name('admin.post.index');
     });
