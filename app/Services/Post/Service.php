@@ -52,7 +52,7 @@ class Service
             unset($data['tags'], $data['category']);
 
             $tagIds = $this->getTagIdsWithUpdate($tags);
-            $data['category_id'] = $this->getTagIdsWithUpdate($category);
+            $data['category_id'] = $this->getCategoryIdWithUpdate($category);
 
             $post->update($data);
             $post->tags()->sync($tagIds);
