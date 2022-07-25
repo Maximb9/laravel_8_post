@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Support\Facades\DB;
-use mysql_xdevapi\Exception;
+//use mysql_xdevapi\Exception;
 
 class Service
 {
@@ -34,7 +34,7 @@ class Service
 
             DB::commit();
 
-        }catch (Exception $exception) {
+        } catch (Exception $exception) {
 
             DB::rollBack();
             return $exception->getMessage();
@@ -46,11 +46,20 @@ class Service
 
     public function update( $post, $data )
     {
-        $tags = $data['tags'];
-        unset($data['tags']);
+        try {
+            $tags = $data['tags'];
+            $category = $data['category'];
+            unset($data['tags'], $data['category']);
 
-        $post->update($data);
-        $post->tags()->sync($tags);
+            $tagIds = $this->getTagIdsWithUpdate($tags);
+            $data['category_id'] = $this->getTagIdsWithUpdate($category);
+
+            $post->update($data);
+            $post->tags()->sync($tagIds);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
         return $post->fresh();
     }
 
@@ -65,6 +74,40 @@ class Service
         $tagIds = [];
         foreach ($tags as $tag) {
             $tag = !isset($tag['id']) ? Tag::create($tag) : Tag::find($tag['id']);
+            $tagIds[] = $tag->id;
+        }
+
+        return $tagIds;
+    }
+
+    private function getCategoryIdWithUpdate( $item )
+    {
+        if(!isset($item['id'])){
+            $category = Category::create($item);
+        } else {
+            $category = Category::find($item['id']);
+            $category->update($item);
+            $category = $category->fresh();
+        }
+
+        return $category->id;
+    }
+
+    private function getTagIdsWithUpdate( $tags )
+    {
+        $tagIds = [];
+
+        foreach ($tags as $tag) {
+            $tag = '';
+
+            if (!isset($tag['id'])) {
+                $tag = Tag::create($tag);
+            } else {
+                $currentTag = Tag::find($tag['id']);
+                $currentTag->update($tag);
+                $tag = $currentTag->fresh();
+            }
+
             $tagIds[] = $tag->id;
         }
 
