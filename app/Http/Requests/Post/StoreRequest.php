@@ -27,8 +27,10 @@ class StoreRequest extends FormRequest
             'title' => 'string',
             'content' => 'string',
             'image' => 'string',
-            'category_id' => '',
-            'tags' => ''
+            'likes' => '',
+            'category' => '',
+            'tags' => '',
+            'tags.*.title' => '',
         ];
     }
 }
