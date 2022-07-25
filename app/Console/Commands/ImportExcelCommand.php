@@ -22,6 +22,7 @@ class ImportExcelCommand extends Command
      */
     public function handle()
     {
-        Excel::import(new PostsImport(), 'users.xlsx');
+        ini_set('memory_limit', '-1');
+        Excel::import(new PostsImport(), public_path('excel/1.xlsx'));
     }
 }
